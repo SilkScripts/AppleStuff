@@ -11,7 +11,7 @@ local isCorruptNatureEspActive = false
 
 local isSurvivorUtilEspActive = false
 
-local autogen = false
+local run = false
 
 local isSurvivorHighlightActive = false
 
@@ -482,9 +482,9 @@ local function initialize()
 
     
    local function autogen(state) 
-    autogen = state
+    run = state
 
-    while autogen do
+    while run do
         
             task.wait()
             for i, v in pairs(game.Workspace.Map.Ingame.Map:GetChildren()) do
