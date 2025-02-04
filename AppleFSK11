@@ -486,7 +486,7 @@ local function initialize()
 
     while run do
         
-            task.wait()
+            task.wait(0.5)
             for i, v in pairs(game.Workspace.Map.Ingame.Map:GetChildren()) do
                 if v.Name == "Generator" then
                     local num = 0
