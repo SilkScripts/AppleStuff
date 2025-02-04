@@ -481,24 +481,25 @@ local function initialize()
     end
 
     
-   local function autogen(state) 
-    run = state
-
-    while run do
-        
+    local function autogen(state)
+        run = state
+        local debounce = {}
+    
+        while run do
             task.wait(0.5)
-            for i, v in pairs(game.Workspace.Map.Ingame.Map:GetChildren()) do
+            for _, v in pairs(game.Workspace.Map.Ingame.Map:GetChildren()) do
                 if v.Name == "Generator" then
-                    local num = 0
-                    repeat
-                    num += 1
-                    v:WaitForChild("Remotes"):WaitForChild("RE"):FireServer()
-                    until num == 4
+                    
+                    if not debounce[v] then
+                        debounce[v] = true
+                        v:WaitForChild("Remotes"):WaitForChild("RE"):FireServer()
+                        task.delay(0.1, function() debounce[v] = nil end)
+                    end
+                end
             end
         end
     end
     
-   end
 
 
 
