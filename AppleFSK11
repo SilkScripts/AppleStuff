@@ -484,7 +484,10 @@ local function initialize()
 
     local function setdelay(value)
         delay = value
-        end
+        
+    end
+
+        
     
     local function autogen(state)
         run = state
