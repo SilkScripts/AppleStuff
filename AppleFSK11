@@ -13,6 +13,8 @@ local isSurvivorUtilEspActive = false
 
 local run = false
 
+local delay
+
 local isSurvivorHighlightActive = false
 
 local givepizza = false
@@ -480,20 +482,26 @@ local function initialize()
         watchtower()
     end
 
+    local function setdelay(value)
+        delay = value
+        end
     
     local function autogen(state)
         run = state
+        
         local debounce = {}
-    
+        
+
+
         while run do
-            task.wait(0.5)
+            task.wait()
             for _, v in pairs(game.Workspace.Map.Ingame.Map:GetChildren()) do
                 if v.Name == "Generator" then
                     
                     if not debounce[v] then
                         debounce[v] = true
                         v:WaitForChild("Remotes"):WaitForChild("RE"):FireServer()
-                        task.delay(0.1, function() debounce[v] = nil end)
+                        task.delay(delay, function() debounce[v] = nil end)
                     end
                 end
             end
@@ -1625,6 +1633,15 @@ local function initialize()
         Description = "Shows generators all around the map.",
         Callback = function(state) 
             toggleHighlightGen(state) 
+        end
+    }
+    gentab:Slider{
+        Name = "Auto Generator Delay",
+        Default = 0.1,
+        Min = 0.1,
+        Max = 10,
+        Callback = function(value) 
+            setdelay(value)
         end
     }
     --
