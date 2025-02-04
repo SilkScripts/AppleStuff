@@ -11,6 +11,8 @@ local isCorruptNatureEspActive = false
 
 local isSurvivorUtilEspActive = false
 
+local autogen = false
+
 local isSurvivorHighlightActive = false
 
 local givepizza = false
@@ -218,21 +220,35 @@ local function initialize()
                         genhighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
                         genhighlight.Name = "GeneratorHighlight"
                     end
-                    
-                    if progress then
-                        progress:GetPropertyChangedSignal("Value"):Connect(function()
-                            if progress.Value == 100 then
-                                local highlight = generator:FindFirstChild("GeneratorHighlight")
-                                if highlight then
-                                    highlight:Destroy()
-                                end
-                            end
-                        end)
-                    end
                 else
                     if existingHighlight then
                         existingHighlight:Destroy()
                     end
+                    return
+                end
+    
+                if progress then
+                    if progress.Value == 100 then
+                        local highlight = generator:FindFirstChild("GeneratorHighlight")
+                        if highlight then
+                            highlight:Destroy()
+                        end
+                        return
+                    end
+    
+                    progress:GetPropertyChangedSignal("Value"):Connect(function()
+                        if progress.Value == 100 then
+                            local highlight = generator:FindFirstChild("GeneratorHighlight")
+                            if highlight then
+                                highlight:Destroy()
+                            end
+                        elseif isHighlightActive and not generator:FindFirstChild("GeneratorHighlight") then
+                            local genhighlight = Instance.new("Highlight")
+                            genhighlight.Parent = generator
+                            genhighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+                            genhighlight.Name = "GeneratorHighlight"
+                        end
+                    end)
                 end
             end
         end
@@ -245,6 +261,8 @@ local function initialize()
             applyGeneratorHighlight(child)
         end)
     end
+    
+    
     
     local function togglehidebar(state)
         hideplayerbar = state 
@@ -463,7 +481,24 @@ local function initialize()
     end
 
     
+   local function autogen(state) 
+    autogen = state
+
+    while autogen do
+        
+            task.wait()
+            for i, v in pairs(game.Workspace.Map.Ingame.Map:GetChildren()) do
+                if v.Name == "Generator" then
+                    local num = 0
+                    repeat
+                    num += 1
+                    v:WaitForChild("Remotes"):WaitForChild("RE"):FireServer()
+                    until num == 4
+            end
+        end
+    end
     
+   end
 
 
 
@@ -1573,7 +1608,16 @@ local function initialize()
     }
     
     
-    
+    gentab:Toggle{
+        Name = "Instant Solver",
+        StartingState = false,
+        Description = "Instantly solve generators when prompted.",
+        Callback = function(state) 
+            autogen(state) 
+        end
+    }
+
+
     gentab:Toggle{
         Name = "Generator Highlight",
         StartingState = false,
