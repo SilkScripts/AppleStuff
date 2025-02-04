@@ -1638,6 +1638,7 @@ local function initialize()
             toggleHighlightGen(state) 
         end
     }
+    
     gentab:Slider{
         Name = "Auto Generator Delay",
         Default = 0.1,
@@ -1647,6 +1648,7 @@ local function initialize()
             setdelay(value)
         end
     }
+
     --
     VisualTab:Toggle{
         Name = "Tool Highlight",
