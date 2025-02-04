@@ -287,7 +287,7 @@ local function initialize()
         local TS = game:GetService("TweenService")
         hawktuahactive = state
     if state then
-        GUI:Notification{Title = "DM", Text = "this mode uses a sound whitelist, dm silk with ur hit sound id to get hawk tuah mode", Duration = 10}
+        GUI:Notification{Title = "DM", Text = "hawk tuah mode", Duration = 10}
     end
         
         game.DescendantAdded:Connect(function(descendant)
