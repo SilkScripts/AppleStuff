@@ -1918,69 +1918,9 @@ local function initialize()
 end
 
 
-local function key()
-    local SG = Instance.new("ScreenGui")
-    local TB = Instance.new("TextBox")
-    local TL1 = Instance.new("TextLabel")
-    local TL2 = Instance.new("TextLabel")
-    local success = Instance.new("Sound")
-    local failure = Instance.new("Sound")
-
-    SG.IgnoreGuiInset = true
-    SG.Parent = player.PlayerGui
-    success.Parent = workspace
-    failure.Parent = workspace
-    success.SoundId = "rbxassetid://12222253"
-    failure.SoundId = "rbxassetid://8090403894"
-
-    TB.Parent = SG
-    TB.TextSize = 90
-    TB.Size = UDim2.new(0.4, 0, 0.3, 0) 
-    TB.AnchorPoint = Vector2.new(0.5, 0.5) 
-    TB.Position = UDim2.new(0.5, 0, 0.4, 0)
-    TB.BackgroundTransparency = 0.2
-    TB.BackgroundColor3 = Color3.fromRGB(62, 62, 62)
-    TB.Text = "Key Here"
+initialize()
 
 
-    TL1.Parent = SG
-    TL1.TextSize = 40
-    TL1.Size = UDim2.new(0.2, 0, 0.05, 0)
-    TL1.AnchorPoint = Vector2.new(0.5, 0.5)
-    TL1.Position = UDim2.new(0.5, 0, 0.7, 0)
-    TL1.BackgroundTransparency = 1
-    TL1.Text = "nil"
-
-    
-    TL2.Parent = SG
-    TL2.TextSize = 40
-    TL2.Size = UDim2.new(0.4, 0, 0.05, 0)
-    TL2.AnchorPoint = Vector2.new(0.5, 0.5)
-    TL2.Position = UDim2.new(0.5, 0, 0.2, 0)
-    TL2.BackgroundTransparency = 1
-    TL2.Text = "join server for key it's free"
-
-   
-    TB.FocusLost:Connect(function(enterPressed)
-        if enterPressed then
-            if TB.Text == "Apple" then
-                TL1.Text = "Success!"
-                TL1.TextColor3 = Color3.fromRGB(0, 255, 0)
-                success:Play()
-                task.delay(1, function()
-                    initialize()
-                    SG:Destroy()
-                end)
-            else
-                TL1.Text = "womp womp"
-                failure:Play()
-                TL1.TextColor3 = Color3.fromRGB(255, 0, 0)
-            end
-        end
-    end)
-end
-
-key()
 
 
 
