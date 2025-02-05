@@ -128,7 +128,7 @@ local function initialize()
 		DisableBuildWarnings = true,
 		DisableRayfieldPrompts = true,
 
-		KeySystem = true,
+		KeySystem = false,
 		KeySettings = {
 			Title = "Appleware Key or sum",
 			Subtitle = "FART HUB PLEASE COLLABBB",
