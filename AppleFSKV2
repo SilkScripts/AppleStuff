@@ -1656,7 +1656,7 @@ local function initialize()
 
      local Slider1 = gentab:CreateSlider({
         Name = "Auto Gen Delay",
-        Range = {0.1, 10},
+        Range = {2.5, 10},
         Increment = 0.1,
         Suffix = "seconds",
         CurrentValue = 0.1,
