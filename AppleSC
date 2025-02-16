@@ -1,0 +1,300 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local running = false
+local running2 = false
+local isSurvivorHighlightActive = false
+local delay
+local delay2
+local detectmodsActive = false
+local check = false
+local TS = game:GetService("TweenService")
+local GUI = Rayfield:CreateWindow({
+    Name = "Apple Scientific Corporation",
+    Theme = "Default",
+    LoadingTitle = "Apple Ware",
+    LoadingSubtitle = "hi ISB",
+    Icon = "apple",
+    Link = "https://github.com/SilkScripts/AppleStuff/get out of here",
+    DisableBuildWarnings = true,
+    DisableRayfieldPrompts = true,
+    KeySystem = false,
+    KeySettings = {
+        Title = "Apple Place",
+        Subtitle = "welcome gang",
+        Note = "Join Discord Server To Get Key | https://discord.gg/fGFV3r9yKC",
+        FileName = "Applewarething",
+        SaveKey = true,
+        GrabKeyFromSite = false,
+        Key = {"Apple"}, 
+    },
+})
+
+local function openvent1()
+    game:GetService("ReplicatedStorage").Remotes.Vents.Open:FireServer(game.Workspace.Vents.Pedestal["Impossible Vent"])
+    game:GetService("ReplicatedStorage").Remotes.Vents.Open:FireServer(game.Workspace.Vents.Manhole)
+    game:GetService("ReplicatedStorage").Remotes.Vents.Open:FireServer(game.Workspace.Vents["Flimsy Vent"])
+    game:GetService("ReplicatedStorage").Remotes.Vents.Open:FireServer(game.Workspace.Vents["Vent"])
+    game:GetService("ReplicatedStorage").Remotes.Vents.Open:FireServer(game.Workspace.Vents["Lockdown Vent"])
+    game:GetService("ReplicatedStorage").Remotes.Vents.Open:FireServer(game.Workspace.Vents["Impossible Impossible Vent"])
+    game:GetService("ReplicatedStorage").Remotes.Vents.Open:FireServer(game.Workspace["Sturdy Vent"])
+    game:GetService("ReplicatedStorage").Remotes.Vents.Open:FireServer(game.Workspace.Vents["Unconspicuous Vent"])
+    game:GetService("ReplicatedStorage").Remotes.Vents.Open:FireServer(game.Workspace.Vents["Window Reinforcement"])
+end
+
+local function solvedoor()
+    game.ReplicatedStorage.Remotes.Doors.StopHack:FireServer()
+end
+
+local function setdelay(value)
+    delay = value
+end
+
+local function setdelay2(value)
+    delay2 = value
+end
+
+local function detectmods(state)
+    if state then
+        detectmodsActive = true
+        local addconnection
+        local removeconnection
+
+        addconnection = game.Players.PlayerAdded:Connect(function(player)
+            if player:IsInGroup(12045972) or player:IsInGroup(33326090) or player:IsInGroup(32366471) then
+                Rayfield:Notify{Title = "MOD/ISB/DEV JOINED!", Content = "Player " .. player.Name .. " has joined.", Duration = 10}
+            end
+        end)
+
+        removeconnection = game.Players.PlayerRemoving:Connect(function(player)
+            if player:IsInGroup(12045972) or player:IsInGroup(33326090) or player:IsInGroup(32366471) then
+                Rayfield:Notify{Title = "MOD/ISB/DEV LEFT!", Content = "Player " .. player.Name .. " has left.", Duration = 10}
+            end
+        end)
+
+        while detectmodsActive do
+            task.wait(1)
+        end
+
+        addconnection:Disconnect()
+        removeconnection:Disconnect()
+    else
+        detectmodsActive = false
+    end
+end
+
+local function survivorHighlighter(state)
+    isSurvivorHighlightActive = state
+
+    local function applySurvivorHighlight(model)
+        if model:IsA("Model") and model:FindFirstChild("Head") then
+            local player = game:GetService("Players"):GetPlayerFromCharacter(model)
+            local existingBillboard = model.Head:FindFirstChild("billboard")
+            local existingHighlight = model:FindFirstChild("HiThere")
+
+            if isSurvivorHighlightActive then
+                if not existingBillboard then
+                    local billboard = Instance.new("BillboardGui")
+                    billboard.Name = "billboard"
+                    billboard.Size = UDim2.new(0, 100, 0, 50)
+                    billboard.StudsOffset = Vector3.new(0, 2, 0)
+                    billboard.AlwaysOnTop = true
+                    billboard.Parent = model.Head
+                    
+                    local textLabel = Instance.new("TextLabel", billboard)
+                    textLabel.Size = UDim2.new(1, 0, 1, 0)
+                    textLabel.Text = tostring(player.Team)
+                    textLabel.TextColor3 = Color3.new(1,1,1)
+                    textLabel.TextStrokeTransparency = 0
+                    textLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
+                    textLabel.BackgroundTransparency = 1
+                end
+
+                if not existingHighlight then
+                    local highlight = Instance.new("Highlight")
+                    highlight.Name = "HiThere"
+                    highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+                    highlight.FillColor = Color3.new(player.TeamColor)
+                    highlight.Parent = model
+                end
+            else
+                if existingBillboard then
+                    existingBillboard:Destroy()
+                end
+                if existingHighlight then
+                    existingHighlight:Destroy()
+                end
+            end
+        end
+    end
+
+    game:GetService("Players").PlayerAdded:Connect(function(player)
+        player.CharacterAdded:Connect(function(character)
+            applySurvivorHighlight(character)
+        end)
+    end)
+
+
+    for _, player in pairs(game:GetService("Players"):GetPlayers()) do
+        if player.Character then
+            applySurvivorHighlight(player.Character)
+        end
+    end
+end
+
+
+local function autodoor(state)
+    running2 = state
+    local debounce = {}
+    while running2 do
+        task.wait()
+        local vent = "vent"
+        if not debounce[vent] then
+            debounce[vent] = true
+            solvedoor()
+            task.delay(delay2, function() debounce[vent] = nil end)
+        end
+    end
+end
+
+local function autovent(state)
+    running = state
+    local debounce = {}
+    while running do
+        task.wait()
+        local vent = "vent"
+        if not debounce[vent] then
+            debounce[vent] = true
+            openvent1()
+            task.delay(delay, function() debounce[vent] = nil end)
+        end
+    end
+end
+
+local function applebutton()
+    local propout = {
+        ImageTransparency = 1
+    }
+    local propin = {
+        ImageTransparency = 0
+    }
+    local screengui = Instance.new("ScreenGui")
+    local frame = Instance.new("Frame")
+    local image = Instance.new("ImageLabel")
+    local sound = Instance.new("Sound")
+    sound.Parent = game.Workspace
+    sound.SoundId = "rbxassetid://1687179774"
+    sound.Volume = 2
+    sound:Play()
+
+    screengui.Parent = game.Players.LocalPlayer.PlayerGui
+    screengui.IgnoreGuiInset = true
+    frame.Parent = screengui
+    image.Parent = frame
+
+    frame.Size = UDim2.new(1, 0, 1, 0)
+    frame.Position = UDim2.new(0, 0, 0, 0)
+    frame.BackgroundTransparency = 1
+
+    image.Size = UDim2.new(1, 0, 1, 0)
+    image.Position = UDim2.new(0, 0, 0, 0)
+    image.BackgroundTransparency = 1
+
+    image.Image = "http://www.roblox.com/asset/?id=1056206965"
+
+    local tweeninfoI = TweenInfo.new(0.3, Enum.EasingStyle.Sine, Enum.EasingDirection.In)
+    local tween = TS:Create(image, tweeninfoI, propout)
+    tween:play()
+
+    wait(1)
+
+    local tweeninfoII = TweenInfo.new(0.6, Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
+    local tweenI = TS:Create(image, tweeninfoII, propin)
+    tweenI:play()
+    screengui:Destroy()
+end
+
+local VisualTab = GUI:CreateTab("Visuals", "eye")
+local gentab = GUI:CreateTab("Site Security", "archive")
+local misctab = GUI:CreateTab("Misc", "meh")
+
+local VisualTabToggle = VisualTab:CreateToggle({
+    Name = "Activate Player Highlights",
+    CurrentValue = false,
+    Callback = function(state)
+        survivorHighlighter(state)
+    end,
+})
+
+
+local OpenVentButton = gentab:CreateButton({
+    Name = "Open Vent",
+    Callback = function()
+        openvent1()
+    end,
+})
+
+local OpenDoorButton = gentab:CreateButton({
+    Name = "Open Door [Scrambler]",
+    Callback = function()
+        solvedoor()
+    end,
+})
+
+gentab:CreateDivider()
+
+local Toggle1 = gentab:CreateToggle({
+    Name = "Auto Vent Open",
+    CurrentValue = false,
+    Callback = function(state)
+        autovent(state)
+    end,
+})
+
+local Toggle2 = gentab:CreateToggle({
+    Name = "Auto Door Open [Scrambler]",
+    CurrentValue = false,
+    Callback = function(state)
+        autodoor(state)
+    end,
+})
+
+gentab:CreateDivider()
+
+local Slider1 = gentab:CreateSlider({
+    Name = "Auto Door Delay",
+    Range = {0.1, 500},
+    Increment = 1,
+    Suffix = "seconds",
+    CurrentValue = 0.1,
+    Callback = function(value)
+        setdelay2(value)
+    end,
+})
+
+local Slider2 = gentab:CreateSlider({
+    Name = "Auto Vent Delay",
+    Range = {0.1, 20},
+    Increment = 1,
+    Suffix = "seconds",
+    CurrentValue = 0.1,
+    Callback = function(value)
+        setdelay(value)
+    end,
+})
+
+local Alterra = misctab:CreateButton({
+    Name = "Alterra",
+    Callback = function()
+        applebutton()
+    end,
+})
+
+misctab:CreateDivider()
+
+local detectmodtoggle = misctab:CreateToggle({
+    Name = "Detect if Mod/ISB/Dev joins",
+    CurrentValue = false,
+    Callback = function(state)
+        detectmods(state)
+    end,
+})
