@@ -7,6 +7,8 @@ local delay
 local delay2
 local detectmodsActive = false
 local check = false
+local UIS = game:GetService("UserInputService")
+local player = game.Players.LocalPlayer
 local TS = game:GetService("TweenService")
 local GUI = Rayfield:CreateWindow({
     Name = "Apple Scientific Corporation",
@@ -43,6 +45,62 @@ end
 
 local function solvedoor()
     game.ReplicatedStorage.Remotes.Doors.StopHack:FireServer()
+end
+
+local function flip()
+    local char = player.Character
+    local hum = char.Humanoid
+    local animator = hum.Animator
+    local hrp = char.HumanoidRootPart
+
+
+    if animator then
+        for _, v in pairs(animator:GetPlayingAnimationTracks()) do
+            v:Stop()
+        end
+    end
+
+    hum:ChangeState(Enum.HumanoidStateType.Physics)
+		hum:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false)
+		hum:SetStateEnabled(Enum.HumanoidStateType.Freefall, false)
+		hum:SetStateEnabled(Enum.HumanoidStateType.Running, false)
+		hum:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
+		hum:SetStateEnabled(Enum.HumanoidStateType.Climbing, false)
+
+		local duration = 0.45
+		local steps = 120
+		local startCFrame = hrp.CFrame
+		local forwardVector = startCFrame.LookVector
+		local upVector = Vector3.new(0, 1, 0)
+		task.spawn(function()
+			local startTime = tick()
+			for i = 1, steps do
+				local t = i / steps
+				local height = 4 * (t - t ^ 2) * 10
+				local nextPos = startCFrame.Position + forwardVector * (35 * t) + upVector * height
+				local rotation = startCFrame.Rotation * CFrame.Angles(-math.rad(i * (360 / steps)), 0, 0)
+
+				hrp.CFrame = CFrame.new(nextPos) * rotation
+				local elapsedTime = tick() - startTime
+				local expectedTime = (duration / steps) * i
+				local waitTime = expectedTime - elapsedTime
+				if waitTime > 0 then
+					task.wait(waitTime)
+				end
+			end
+
+			hrp.CFrame = CFrame.new(startCFrame.Position + forwardVector * 35) * startCFrame.Rotation
+			hum:SetStateEnabled(Enum.HumanoidStateType.FallingDown, true)
+			hum:SetStateEnabled(Enum.HumanoidStateType.Freefall, true)
+			hum:SetStateEnabled(Enum.HumanoidStateType.Running, true)
+			hum:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
+			hum:SetStateEnabled(Enum.HumanoidStateType.Climbing, true)
+			hum:ChangeState(Enum.HumanoidStateType.Running)
+
+			
+		end)
+
+
 end
 
 local function setdelay(value)
@@ -298,3 +356,15 @@ local detectmodtoggle = misctab:CreateToggle({
         detectmods(state)
     end,
 })
+
+misctab:CreateDivider()
+
+local Keybind = misctab:CreateKeybind({
+    Name = "Frontflip",
+    CurrentKeybind = "K",
+    HoldToInteract = false,
+   
+    Callback = function(Keybind)
+    flip()
+    end,
+ })
