@@ -1542,54 +1542,67 @@ local function initialize()
             end
     end
     
-    local function flip()
-        local character = player.Character
-        local humanoid = character.Humanoid
-        local characteranimator = humanoid.Animator
-        local rootpart = character.HumanoidRootPart
+    local function flip() -- bro ivan if you see this mine started SPINNING LIKE A DOLPHIN I CANT BRO IM SORRY BUT I WANTED TO USE THIS WHEN I WAS USING MY UI LOLLL 
+        local char = player.Character
+        local hum = char.Humanoid
+        local animator = hum.Animator
+        local hrp = char.HumanoidRootPart
     
-        if characteranimator then
-            for _, animation in pairs(characteranimator:GetPlayingAnimationTracks()) do
-                animation:Stop()
+    
+        if animator then
+            for _, v in pairs(animator:GetPlayingAnimationTracks()) do
+                v:Stop()
             end
         end
     
-        humanoid:ChangeState(Enum.HumanoidStateType.Physics)
-        humanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false)
-        humanoid:SetStateEnabled(Enum.HumanoidStateType.Freefall, false)
-        humanoid:SetStateEnabled(Enum.HumanoidStateType.Running, false)
-        humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
-        humanoid:SetStateEnabled(Enum.HumanoidStateType.Climbing, false)
+        hum:ChangeState(Enum.HumanoidStateType.Physics)
+            hum:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false)
+            hum:SetStateEnabled(Enum.HumanoidStateType.Freefall, false)
+            hum:SetStateEnabled(Enum.HumanoidStateType.Running, false)
+            hum:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
+            hum:SetStateEnabled(Enum.HumanoidStateType.Climbing, false)
     
-        local animationduration = 0.45
-        local totalsteps = 120
-        local initialcframe = rootpart.CFrame
-        local forwarddirection = initialcframe.LookVector
-        local upwarddirection = Vector3.new(0, 1, 0)
-        
-        local animationstarttime = tick()
-        for currentstep = 1, totalsteps do
-            local progress = currentstep / totalsteps
-            local verticaloffset = 20 * math.sin(math.pi * progress)
-            local newposition = initialcframe.Position + forwarddirection * (35 * progress) + upwarddirection * verticaloffset
-            local newrotation = initialcframe * CFrame.Angles(math.rad(-360 * progress), 0, 0)
-            rootpart.CFrame = CFrame.new(newposition) * newrotation
-            local elapsedtime = tick() - animationstarttime
-            local expectedtime = (animationduration / totalsteps) * currentstep
-            local remainingwaittime = expectedtime - elapsedtime
-            if remainingwaittime > 0 then
-                task.wait(remainingwaittime)
-            end
-        end
-        
-        rootpart.CFrame = CFrame.new(initialcframe.Position + forwarddirection * 35) * initialcframe.Rotation
-        humanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown, true)
-        humanoid:SetStateEnabled(Enum.HumanoidStateType.Freefall, true)
-        humanoid:SetStateEnabled(Enum.HumanoidStateType.Running, true)
-        humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
-        humanoid:SetStateEnabled(Enum.HumanoidStateType.Climbing, true)
-        humanoid:ChangeState(Enum.HumanoidStateType.Running)
+            local duration = 0.45
+            local steps = 120
+            local startCFrame = hrp.CFrame
+            local forwardVector = startCFrame.LookVector
+            local upVector = Vector3.new(0, 1, 0)
+            task.spawn(function()
+                local startTime = tick()
+                for i = 1, steps do
+                    local t = i / steps
+                    local height = 4 * (t - t ^ 2) * 10
+                    local nextPos = startCFrame.Position + forwardVector * (35 * t) + upVector * height
+                    local rotation = startCFrame.Rotation * CFrame.Angles(-math.rad(i * (360 / steps)), 0, 0)
+    
+                    hrp.CFrame = CFrame.new(nextPos) * rotation
+                    local elapsedTime = tick() - startTime
+                    local expectedTime = (duration / steps) * i
+                    local waitTime = expectedTime - elapsedTime
+                    if waitTime > 0 then
+                        task.wait(waitTime)
+                    end
+                end
+    
+                hrp.CFrame = CFrame.new(startCFrame.Position + forwardVector * 35) * startCFrame.Rotation
+                hum:SetStateEnabled(Enum.HumanoidStateType.FallingDown, true)
+                hum:SetStateEnabled(Enum.HumanoidStateType.Freefall, true)
+                hum:SetStateEnabled(Enum.HumanoidStateType.Running, true)
+                hum:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
+                hum:SetStateEnabled(Enum.HumanoidStateType.Climbing, true)
+                hum:ChangeState(Enum.HumanoidStateType.Running)
+    
+                
+            end)
+    
+    
     end
+    
+    
+    
+    
+    
+    
     
     
     local function staminadrainono(state)
