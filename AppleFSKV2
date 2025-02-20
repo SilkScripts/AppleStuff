@@ -1841,8 +1841,8 @@ local function initialize()
 
      misctab:CreateDivider() 
 
-     local Keybind2 = misctab:CreateKeybind({
-        Name = "Apple Flip",
+     local Key = misctab:CreateKeybind({
+        Name = "flip lol",
         CurrentKeybind = "K",
         HoldToInteract = false,
        
@@ -1850,6 +1850,7 @@ local function initialize()
         flip()
         end,
      })
+     
     
     --
     
