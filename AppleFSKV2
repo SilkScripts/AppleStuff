@@ -1543,9 +1543,9 @@ local function initialize()
     end
     
     local function flip()
-        local character = player.character
-        local humanoid = character.humanoid
-        local characteranimator = humanoid.animator
+        local character = player.Character
+        local humanoid = character.Humanoid
+        local characteranimator = humanoid.Animator
         local rootpart = character.HumanoidRootPart
     
         if characteranimator then
