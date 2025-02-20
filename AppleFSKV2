@@ -1547,13 +1547,20 @@ local function initialize()
         stam = state
         local stamscript = require(game.ReplicatedStorage.Systems.Character.Game.Sprinting)
         
-        while stam do
-            stamscript.StaminaLossDisabled = true
-            task.wait(1)
-        end
+        local connection
+        connection = game:GetService("RunService").Heartbeat:Connect(function()
+            if not stam then
+                connection:Disconnect()
+                stamscript.StaminaLossDisabled = nil
+                return
+            end
+            stamscript.StaminaLossDisabled = function() 
+            end
+        end)
         
         
-            stamscript.StaminaLossDisabled = nil
+        
+            
     end
     
     
